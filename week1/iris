@@ -1,1 +1,52 @@
+붓꽃 데이터를 가지고 머신러닝 4가지 분류를 수행.
+( DT, RF, SVM, LR)
 
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import LabelEncoder
+
+df = pd.read_csv("iris.csv")
+
+# 입력(X)과 출력(y) 분리
+X = df.iloc[:, :-1]  # 마지막 열을 제외한 나머지 특성
+y = df.iloc[:, -1]  # 마지막 열 (클래스 레이블)
+
+# 문자열 레이블을 숫자로 변환
+label_encoder = LabelEncoder()
+y = label_encoder.fit_transform(y)
+
+# 데이터 분할 (학습용 80%, 테스트용 20%)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# 1. 결정 트리 (DT)
+dt_model = DecisionTreeClassifier(random_state=42)
+dt_model.fit(X_train, y_train)
+dt_pred = dt_model.predict(X_test)
+dt_acc = accuracy_score(y_test, dt_pred)
+print(f"결정 트리 정확도: {dt_acc:.2f}")
+
+# 2. 랜덤 포레스트 (RF)
+rf_model = RandomForestClassifier(random_state=42)
+rf_model.fit(X_train, y_train)
+rf_pred = rf_model.predict(X_test)
+rf_acc = accuracy_score(y_test, rf_pred)
+print(f"랜덤 포레스트 정확도: {rf_acc:.2f}")
+
+# 3. 서포트 벡터 머신 (SVM)
+svm_model = SVC(random_state=42)
+svm_model.fit(X_train, y_train)
+svm_pred = svm_model.predict(X_test)
+svm_acc = accuracy_score(y_test, svm_pred)
+print(f"SVM 정확도: {svm_acc:.2f}")
+
+# 4. 로지스틱 회귀 (LR)
+lr_model = LogisticRegression(max_iter=200)
+lr_model.fit(X_train, y_train)
+lr_pred = lr_model.predict(X_test)
+lr_acc = accuracy_score(y_test, lr_pred)
+print(f"로지스틱 회귀 정확도: {lr_acc:.2f}")
